@@ -2,7 +2,7 @@
 set :user, 'deploy'
 
 set :application, "prix-ars-2013-server"
-set :repository,  "git@github.com:uniba/#{application}.git"
+set :repository,  "git@github.com:CircuitLab/#{application}.git"
 
 set :scm, :git
 set :scm_verbose, true
