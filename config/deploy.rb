@@ -61,7 +61,7 @@ _EOT_ > /etc/yum.repos.d/10gen.repo"
       && echo 'export PATH=$HOME/.nodebrew/current/bin:$PATH' >> ~/.bashrc
   EOM
   run "source ~/.bashrc"
-  run "test -d .nodebrew/node/v0.8.16 || nodebrew install-binary 0.8.18"
+  run "test -d .nodebrew/node/v0.8.18 || nodebrew install-binary 0.8.18"
   run "nodebrew use 0.8.18"
   run "npm -g up"
   
