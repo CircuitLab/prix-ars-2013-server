@@ -21,7 +21,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.favicon());
 app.use(express.logger('dev'));
-app.use(express.bodyParser());
+app.use(express.bodyParser({ uploadDir: __dirname + '/public/uploads'} ));
 app.use(express.methodOverride());
 app.use(app.router);
 app.use(require('stylus').middleware(__dirname + '/public'));
@@ -30,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.locals.title = morph.toTitle(pkg.name);
 
 app.get('/', routes.index);
+app.post('/upload', routes.upload);
 
 if (!module.parent) {
   http.createServer(app).listen(app.get('port'), function() {
