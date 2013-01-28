@@ -8,13 +8,15 @@ set :scm, :git
 set :scm_verbose, true
 set :git_shallow_clone, 1
 
-set :deploy_to, "/home/uniba/app/#{application}"
+set :deploy_to, "/home/deploy/app/#{application}"
 set :deploy_via, :remote_cache
 
 set :use_sudo, false
 
+set :node_env, "production"
 set :node_port, 80
 set :process_uid, user
+set :process_env, "NODE_ENV=#{node_env} PORT=#{node_port} UID=#{process_uid}"
 
 role :app, 'prix-ars-2013.aws.uniba.jp'
 
@@ -48,7 +50,7 @@ after "deploy:setup", :roles => :app do
 name=10gen Repository
 baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64
 gpgcheck=0
-enabled=0'
+enabled=0
 _EOT_ > /etc/yum.repos.d/10gen.repo"
   sudo "yum --enablerepo=10gen install -y mongo-10gen mongo-10gen-server"
   sudo "service mongod start"
