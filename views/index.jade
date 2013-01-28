@@ -4,5 +4,16 @@ block content
   h1= title
   p Welcome to #{title}
   form(method='post', action='/upload', enctype='multipart/form-data')
-    input(type='file', name='file')
+    p latitude:&nbsp;&nbsp;&nbsp;&nbsp;
+      input(type='text', name='latitude')
+    p longitude: 
+      input(type='text', name='longitude')
+    p 
+      input(type='file', name='file')
     input(type='submit', value='upload')
+  - if (takes.length)
+    ul
+      - takes.forEach(function(take) {
+        li
+          img(src=take.picture)
+      - })
