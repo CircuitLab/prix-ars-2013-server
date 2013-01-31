@@ -4,36 +4,36 @@
  */
 
 var path = require('path')
-  , Take = require('../models').Take; 
+  , Photo = require('../models').Photo; 
 
 /*
  * GET /
  */
 
 exports.index = function(req, res) {
-  Take.find({}, function(err, takes) {
+  Photo.find({}, function(err, photos) {
     if (err) console.log(err);
 
-    takes.forEach(function(take) {
-      take.picture = './uploads/' + take.picture;
+    photos.forEach(function(photo) {
+      photo.picture = './photos/' + photo.picture;
     });
-    res.render('index', { takes: takes });
+
+    res.render('index', { photos: photos });
   });
 };
 
 /*
- * POST /upload
+ * POST /photos
  */
 
-exports.upload = function(req, res) {
+exports.photos = function(req, res) {
   var body     = req.body
     , pathname = req.files.file.path
     , filename = path.basename(pathname);
 
-  Take.create({
-    latitude:  body.latitude,
-    longitude: body.longitude,
-    picture:   filename
+  Photo.create({
+    file: filename,
+    
   },
 
   function(err) {
