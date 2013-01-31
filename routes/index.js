@@ -31,9 +31,15 @@ exports.photos = function(req, res) {
     , pathname = req.files.file.path
     , filename = path.basename(pathname);
 
+  console.log(body);
+
   Photo.create({
-    file: filename,
-    
+    file:      filename,
+    binary:    body.photo,
+    x:         body.x,
+    y:         body.y,
+    timestamp: body.timestamp,
+    battery:   body.battery
   },
 
   function(err) {

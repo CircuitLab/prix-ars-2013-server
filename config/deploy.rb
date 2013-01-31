@@ -36,11 +36,13 @@ namespace :deploy do
 end
 
 after "deploy:create_symlink", :roles => :app do
+  run "ln -svf #{shared_path}/photos #{current_path}/public/photos"
   run "ln -svf #{shared_path}/node_modules #{current_path}/node_modules"
   run "cd #{current_path} && npm i"
 end
 
 after "deploy:setup", :roles => :app do
+  run "mkdir -pv #{shared_path}/photos"
   run "mkdir -pv #{shared_path}/node_modules"
   run "mkdir -pv #{shared_path}/backup"
     

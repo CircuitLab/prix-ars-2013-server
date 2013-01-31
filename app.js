@@ -30,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.locals.title = morph.toTitle(pkg.name);
 
 app.get('/', routes.index);
+
 app.post('/photos', routes.photos);
 
 if (!module.parent) {
