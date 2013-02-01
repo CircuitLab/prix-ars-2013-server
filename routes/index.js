@@ -35,8 +35,13 @@ exports.photos = function(req, res) {
 
   console.log(body);
 
-  res.json(200, { status: 'OK' });
+  res.header({
+    'Content-Type':'application/json',
+    'cache-control':'no-cache'
+  });
   
+  res.json(200, { status: 'OK' });
+
   // Photo.create({
   //   file:      filename,
   //   binary:    body.photo,
