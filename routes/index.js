@@ -29,9 +29,9 @@ exports.index = function(req, res) {
 
 exports.photos = function(req, res) {
   console.log('photos');
-  var body     = req.body
-    , pathname = req.files.file.path
-    , filename = path.basename(pathname);
+  var body     = req.body;
+    // , pathname = req.files.file.path
+    // , filename = path.basename(pathname);
 
   console.log(body);
 
@@ -39,7 +39,7 @@ exports.photos = function(req, res) {
     'Content-Type':'application/json',
     'cache-control':'no-cache'
   });
-  
+
   res.json(200, { status: 'OK' });
 
   // Photo.create({
