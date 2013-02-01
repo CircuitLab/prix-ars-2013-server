@@ -8,9 +8,12 @@ var pkg = require('./package')
   , express = require('express')
   , routes = require('./routes')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , sio = require('socket.io');
 
-var app = module.exports = express();
+var app = module.exports = express()
+  , server = http.createServer(app)
+  , io = sio.listen(server);
 
 if ('development' === app.get('env')) {
   app.use(express.errorHandler());
@@ -30,11 +33,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.locals.title = morph.toTitle(pkg.name);
 
 app.get('/', routes.index);
-
 app.post('/photos', routes.photos);
 
+io.sockets.on('connection', function(socket) {
+  console.log(io.rooms);
+  console.log(socket.id);
+  
+  socket.on('hello', function(data) {
+    console.log(data);
+  });
+
+  socket.on('battery', function(data) {
+    console.log(data);
+  });
+});
+
 if (!module.parent) {
-  http.createServer(app).listen(app.get('port'), function() {
+  server.listen(app.get('port'), function() {
     console.log("Express server listening on port " + app.get('port'));
   });
 }

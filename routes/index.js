@@ -11,11 +11,12 @@ var path = require('path')
  */
 
 exports.index = function(req, res) {
+  console.log('index');
   Photo.find({}, function(err, photos) {
     if (err) console.log(err);
 
     photos.forEach(function(photo) {
-      photo.picture = './photos/' + photo.picture;
+      photo.file = './photos/' + photo.file;
     });
 
     res.render('index', { photos: photos });
@@ -27,23 +28,27 @@ exports.index = function(req, res) {
  */
 
 exports.photos = function(req, res) {
+  console.log('photos');
   var body     = req.body
     , pathname = req.files.file.path
     , filename = path.basename(pathname);
 
   console.log(body);
 
-  Photo.create({
-    file:      filename,
-    binary:    body.photo,
-    x:         body.x,
-    y:         body.y,
-    timestamp: body.timestamp,
-    battery:   body.battery
-  },
+  res.json(200, { status: 'OK' });
+  
+  // Photo.create({
+  //   file:      filename,
+  //   binary:    body.photo,
+  //   x:         body.x,
+  //   y:         body.y,
+  //   timestamp: body.timestamp,
+  //   battery:   body.battery
+  // },
 
-  function(err) {
-    if (err) console.log(err);
-    res.redirect('back');
-  });
+  // function(err) {
+  //   if (err) console.log(err);
+  //   res.redirect('back');
+  // });
+  // res.end(200);
 }
