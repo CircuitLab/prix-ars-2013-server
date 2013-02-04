@@ -5,3 +5,9 @@ body {
 a {
   color: #00b7ff;
 }
+ul {
+  list-style: none;
+}
+ul li {
+  float: left;
+}

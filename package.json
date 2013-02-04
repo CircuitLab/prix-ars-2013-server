@@ -11,6 +11,7 @@
     "stylus": "*",
     "mongoose": "~3.5.4",
     "morph": "~0.1.0",
-    "socket.io": "~0.9.13"
+    "socket.io": "~0.9.13",
+    "spdy": "~1.4.3"
   }
 }

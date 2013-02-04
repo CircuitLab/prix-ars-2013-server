@@ -4,6 +4,7 @@
  */
 
 var path = require('path')
+  , fs = require('fs')
   , Photo = require('../models').Photo; 
 
 /*
@@ -28,19 +29,31 @@ exports.index = function(req, res) {
  */
 
 exports.photos = function(req, res) {
-  console.log('photos');
   var body     = req.body;
     // , pathname = req.files.file.path
     // , filename = path.basename(pathname);
 
   console.log(body);
 
-  res.header({
-    'Content-Type':'application/json',
-    'cache-control':'no-cache'
+  var fileName = './public/photos/sample2.png'
+    , image = new Buffer(body.photo, 'base64');
+    // , file = fs.openSync(fileName, "w");
+
+  // fs.writeSync(file, image, 0, image.length);
+  // fs.closeSync(file);
+
+  fs.writeFile(fileName, image, function(err) {
+    console.log(err);
   });
 
-  res.json(200, { status: 'OK' });
+  // console.log(req);
+
+  // res.header({
+  //   'Content-Type':'application/json',
+  //   'cache-control':'no-cache'
+  // });
+
+  // res.json(200, { status: 'OK' });
 
   // Photo.create({
   //   file:      filename,
@@ -55,5 +68,5 @@ exports.photos = function(req, res) {
   //   if (err) console.log(err);
   //   res.redirect('back');
   // });
-  // res.end(200);
+  res.json(200, { status: 'OK' });
 }
