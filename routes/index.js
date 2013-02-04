@@ -12,7 +12,6 @@ var path = require('path')
  */
 
 exports.index = function(req, res) {
-  console.log('index');
   Photo.find({}, function(err, photos) {
     if (err) console.log(err);
 
@@ -35,14 +34,15 @@ exports.photos = function(req, res) {
 
   console.log(body);
 
-  var fileName = './public/photos/sample2.png'
+  var filename = Math.floor(Math.random() * 10000000) + '.png'
+    , filepath = './public/photos/' + filename
     , image = new Buffer(body.photo, 'base64');
     // , file = fs.openSync(fileName, "w");
 
   // fs.writeSync(file, image, 0, image.length);
   // fs.closeSync(file);
 
-  fs.writeFile(fileName, image, function(err) {
+  fs.writeFile(filepath, image, function(err) {
     console.log(err);
   });
 
@@ -54,6 +54,10 @@ exports.photos = function(req, res) {
   // });
 
   // res.json(200, { status: 'OK' });
+
+  Photo.create({ file: filename }, function(err, photo) {
+    console.log(err, photo);
+  });
 
   // Photo.create({
   //   file:      filename,
