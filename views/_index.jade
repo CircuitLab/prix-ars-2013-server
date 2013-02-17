@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  form(method='post', action='/photos', enctype='multipart/form-data')
+    p timestamp:
+      input(type='text', name='timestamp')
+    p x: 
+      input(type='text', name='x')
+    p y: 
+      input(type='text', name='y')
+    p 
+      input(type='file', name='file')
+    input(type='submit', value='upload')
+  - if (photos.length)
+    ul
+      - photos.forEach(function(photo) {
+        li
+          img(src=photo.file)
+      - })

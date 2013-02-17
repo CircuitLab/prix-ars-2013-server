@@ -1,21 +1,34 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  form(method='post', action='/photos', enctype='multipart/form-data')
-    p timestamp:
-      input(type='text', name='timestamp')
-    p x: 
-      input(type='text', name='x')
-    p y: 
-      input(type='text', name='y')
-    p 
-      input(type='file', name='file')
-    input(type='submit', value='upload')
-  - if (photos.length)
-    ul
-      - photos.forEach(function(photo) {
-        li
-          img(src=photo.file)
-      - })
+  div#panel
+    
+  div#map
+  
+  script(id='infowindow', type='text/html')
+    | <div id="<%= udid %>">
+    |   <button class="btn take" href="#"><i class="icon-camera"></i></button>
+    |   <p>lat：<%= lat %></p>
+    |   <p>lng：<%= lng %></p>
+    |   <form class="viewpoint" action="#">
+    |     <input type="hidden" name="udid" value="<%= udid %>">
+    |     <p>
+    |       x：<input class="viewpoint-x" type="text" name="x" size="40" value="<%= x %>">
+    |     </p>
+    |     <p>
+    |       y：<input class="viewpoint-y" type="text" name="y" size="40" value="<%= y %>">
+    |     </p>
+    |     <p class="submit-btn">
+    |       <input class="btn btn-primary" type="submit" value="Submit">
+    |     </p>
+    |   </form>
+    | </div>
+
+  script(id='photos', type='text/html')
+    | <ul id='photos'>
+    | </ul>
+
+  script(id='photo', type='text/html')
+    |   <li>
+    |     <img src="<%= src %>" height="100">
+    |   </li>

@@ -5,6 +5,7 @@
 
 var path = require('path')
   , fs = require('fs')
+  , base64id = require('base64id')
   , Photo = require('../models').Photo; 
 
 /*
@@ -19,7 +20,7 @@ exports.index = function(req, res) {
       photo.file = './photos/' + photo.file;
     });
 
-    res.render('index', { photos: photos });
+    res.render('index', { title: 'Yeah!', photos: photos });
   });
 };
 
@@ -28,25 +29,24 @@ exports.index = function(req, res) {
  */
 
 exports.photos = function(req, res) {
-  var body     = req.body;
-    // , pathname = req.files.file.path
-    // , filename = path.basename(pathname);
-
-  console.log(body);
-
-  var filename = Math.floor(Math.random() * 10000000) + '.png'
-    , filepath = './public/photos/' + filename
-    , image = new Buffer(body.photo, 'base64');
-    // , file = fs.openSync(fileName, "w");
-
-  // fs.writeSync(file, image, 0, image.length);
-  // fs.closeSync(file);
+  var body     = req.body
+    , filename = Date.now() + '-' + base64id.generateId() + '.png'
+    , filepath = '../public/photos/' + filename
+    , image    = new Buffer(body.photo, 'base64');
 
   fs.writeFile(filepath, image, function(err) {
-    console.log(err);
-  });
+    Photo.create({
+      file:      filename,
+      x:         body.x,
+      y:         body.y,
+      timestamp: body.timestamp,
+      battery:   body.battery
+    },
 
-  // console.log(req);
+    function(err) {
+      if (err) console.log(err);
+    });
+  });
 
   // res.header({
   //   'Content-Type':'application/json',

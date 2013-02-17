@@ -1,0 +1,37 @@
+[
+  {
+    "udid": "01234",
+    "latitude": 35.37,
+    "longtitude": 138.74,
+    "x": 123,
+    "y": 456
+  },
+  {
+    "udid": "56789",
+    "latitude": 35.38,
+    "longtitude": 138.74,
+    "x": 123,
+    "y": 456
+  },
+  {
+    "udid": "abcde",
+    "latitude": 35.37,
+    "longtitude": 138.75,
+    "x": 123,
+    "y": 456
+  },
+  {
+    "udid": "fghij",
+    "latitude": 35.36,
+    "longtitude": 138.73,
+    "x": 123,
+    "y": 456
+  },
+  {
+    "udid": "klnmo",
+    "latitude": 35.33,
+    "longtitude": 138.74,
+    "x": 123,
+    "y": 456
+  }
+]

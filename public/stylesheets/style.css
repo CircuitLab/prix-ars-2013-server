@@ -1,13 +1,38 @@
+html {
+  height: 100%;
+}
 body {
-  padding: 50px;
+  height: 100%;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0;
 }
 a {
   color: #00b7ff;
 }
-ul {
+#map {
+  height: 100%;
+}
+#panel {
+  background-color: #fff;
+  border-left: 1px solid #d9d9d9;
+  border-color: rgba(102,102,102,0.25);
+  width: 200px;
+  height: 100%;
+  position: absolute;
+  right: 0px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  z-index: 999;
+}
+#panel ul {
+  padding: 0;
+  margin: 0 auto;
+  width: 180px;
   list-style: none;
 }
-ul li {
-  float: left;
+#panel ul li {
+  margin: 8px 0;
+}
+.submit-btn {
+  text-align: center;
 }
