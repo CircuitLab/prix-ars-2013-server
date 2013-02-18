@@ -18,14 +18,6 @@ var app = module.exports = express()
   , manager = new Manager(app, io);
 
 /**
- * Error handler.
- */
-
-if ('development' === app.get('env')) {
-  app.use(express.errorHandler());
-}
-
-/**
  * Configuration.
  */
 
@@ -33,19 +25,23 @@ app.configure(function() {
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
-
   app.use(express.favicon());
-  // app.use(express.logger('dev'));
-  app.use(express.bodyParser({
-      uploadDir: __dirname + '/public/photos'
-    , keepExtensions: true
-  }));
+  app.use(express.logger('dev'));
+  // app.use(express.bodyParser({
+  //   uploadDir: __dirname + '/public/photos',
+  //   keepExtensions: true
+  // }));
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(require('stylus').middleware(__dirname + '/public'));
   app.use(express.static(path.join(__dirname, 'public')));
 });
+
 app.locals.title = morph.toTitle(pkg.name);
+
+if ('development' === app.get('env')) {
+  app.use(express.errorHandler());
+}
 
 /**
  * Routes.
@@ -70,9 +66,9 @@ io
     //   manager.updateBattery(socket, message);
     // });
 
-    // socket.on('disconnect', function() {
-    //   manager.removeClient(socket);
-    // });
+    socket.on('disconnect', function() {
+      manager.removeClient(socket);
+    });
   });
 
 io
@@ -81,8 +77,7 @@ io
     manager.addOverlooker(socket);
 
     socket.on('viewpoint', function(message) {
-      manager.pointView(socket, message);
-      // socket.broadcast.emit('viewpoint', message);
+      manager.pointView(message);
     });
 
     socket.on('take', function(message) {

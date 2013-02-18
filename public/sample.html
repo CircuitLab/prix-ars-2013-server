@@ -19,6 +19,10 @@
         });
       });
 
+      socket.on('viewpoint', function(message) {
+        console.log('viewpoint', message);
+      });
+      
       socket.on('take', function() {
         console.log('take');
       });

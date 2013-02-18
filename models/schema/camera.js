@@ -40,3 +40,17 @@ Camera.statics.findOrInitializeByUdid = function(udid, callback) {
     }
   });
 }
+
+Camera.statics.killByUdid = function(udid, callback) {
+  var self = this;
+
+  self.findByUdid(udid, function(err, doc) {
+    if (err) return callback(err);
+    if (!doc) return callback(null);
+
+    doc.living = false;
+    doc.save(function(err) {
+      return callback(err);
+    });
+  });
+}

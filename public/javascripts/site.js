@@ -15,19 +15,49 @@ $.fn.serializeObject = function() {
  */
 
 function Overlook(socket, photoView, opts) {
-  this.socket = socket;
-  this.photoView = photoView;
-
   this.cameras = {};
 
-  this.map = new google.maps.Map(document.getElementById('map'), opts);
+  this.socket = socket;
+  this.photoView = photoView;
+  this.map = new google.maps.Map($('#map').get(0), opts);
+
+  this.aliveIcon = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png';
+  this.deadIcon = 'http://chart.apis.google.com/chart?'
+                + 'chst=d_map_xpin_icon&'
+                + 'chld=pin|glyphish_skull|909090|FF0000';
 }
 
 Overlook.prototype.createCamera = function(camera) {
   var camera = new Camera(this, camera);
 
   this.cameras[camera.udid] = camera;
+  google.maps.event.addListener(camera.marker, 'click', function() {
+    camera.openInfo();
+  });
+
   return camera;
+}
+
+Overlook.prototype.findCamera = function(udid) {
+  return this.cameras[udid];
+}
+
+Overlook.prototype.createOrReviveCamera = function(udid) {
+  var camera = this.findCamera(udid);
+
+  if (camera) {
+    camera.revive();
+  } else {
+    this.createCamera(camera);
+  }
+}
+
+Overlook.prototype.killCamera = function(udid) {
+  var camera = this.findCamera(udid);
+
+  if (camera) {
+    camera.die();
+  }
 }
 
 Overlook.prototype.closeInfo = function() {
@@ -57,13 +87,14 @@ Overlook.prototype.takePhoto = function(udid) {
 function Camera(overlook, opts) {
   this.overlook = overlook;
   this.map = overlook.map;
-  this.photoView = overlook.photoView;
+  this.photoView = overlook.photoView
 
   this.udid = opts.udid;
   this.lat = opts.latitude;
   this.lng = opts.longtitude;
   this.x = opts.x;
   this.y = opts.y;
+  this.living = opts.living;
 
   this.photos = opts.photos;
 
@@ -73,6 +104,8 @@ function Camera(overlook, opts) {
     animation: google.maps.Animation.DROP,
     title: this.udid
   });
+
+  if (!this.living) this.marker.setIcon(this.overlook.deadIcon);
 
   this.el = '#' + this.udid;
 
@@ -111,16 +144,24 @@ Camera.prototype.addPhotos = function() {
   this.photoView.addPhotos(this.photos);
 }
 
+Camera.prototype.die = function() {
+  this.marker.setIcon(this.overlook.deadIcon);
+}
+
+Camera.prototype.revive = function() {
+  this.marker.setIcon(this.overlook.aliveIcon);
+}
+
 /**
  * Constructs a new PhotoView.
  */
 
 function PhotoView(panel) {
-  this.panel = $(panel);
+  // this.panel = $(panel);
   this.el = '#photos';
   this.template = _.template($(this.el).html());
 
-  this.panel.html(this.template());
+  // this.panel.html(this.template());
 }
 
 PhotoView.prototype.addPhotos = function(photos) {
@@ -142,37 +183,38 @@ PhotoView.prototype.appendPhoto = function(photo) {
 
 $(function() {
 
+  var FUJI = new google.maps.LatLng(35.36, 138.75)
+    , TOKYO = new google.maps.LatLng(35.663411, 139.70502);
+
   var mapType = google.maps.MapTypeId.SATELLITE
-    , zoom = 13
-    , center = new google.maps.LatLng(35.36, 138.75);
+    , zoom = 17;
+    // , zoom = 13;
 
   var socket = new io.connect('/overlook')
     , photoView = new PhotoView('#panel');
   
   var overlook = new Overlook(socket, photoView, {
-    zoom: 13,
+    zoom: zoom,
     mapTypeId: mapType,
-    center: center
+    center: TOKYO
   });
 
   socket.on('init', function(cameras) {
     _.map(cameras, function(camera) {
-      var c = overlook.createCamera(camera);
-      google.maps.event.addListener(c.marker, 'click', function() {
-        c.openInfo();
-      });
+      overlook.createCamera(camera);
     });
+  });
+
+  socket.on('hello', function(camera) {
+    overlook.createOrReviveCamera(camera.udid);
   });
 
   socket.on('viewpoint', function(message) {
     overlook.renderVp(message);
   });
 
-  socket.on('hello', function(camera) {
-    var c = overlook.createCamera(camera);
-    google.maps.event.addListener(c.marker, 'click', function() {
-      c.openInfo();
-    });
+  socket.on('goodbye', function(camera) {
+    overlook.killCamera(camera.udid);
   });
 
   $(document).on('submit', '.viewpoint', function() {
