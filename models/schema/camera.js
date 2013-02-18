@@ -16,7 +16,7 @@ var Camera = module.exports = new Schema({
   battery:    Number,
   x:          Number,
   y:          Number,
-  living:     Boolean,
+  living:     { type: Boolean, default: false },
   photos:     [{ type: Schema.Types.ObjectId, ref: 'Photo' }],
   created:    { type: Date, default: Date.now, index: true }
 });

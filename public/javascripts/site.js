@@ -168,6 +168,13 @@ $(function() {
     overlook.renderVp(message);
   });
 
+  socket.on('hello', function(camera) {
+    var c = overlook.createCamera(camera);
+    google.maps.event.addListener(c.marker, 'click', function() {
+      c.openInfo();
+    });
+  });
+
   $(document).on('submit', '.viewpoint', function() {
     overlook.updateVp($(this).serializeObject());
     return false;

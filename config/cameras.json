@@ -4,34 +4,39 @@
     "latitude": 35.37,
     "longtitude": 138.74,
     "x": 123,
-    "y": 456
+    "y": 456,
+    "living": false
   },
   {
     "udid": "56789",
     "latitude": 35.38,
     "longtitude": 138.74,
     "x": 123,
-    "y": 456
+    "y": 456,
+    "living": false
   },
   {
     "udid": "abcde",
     "latitude": 35.37,
     "longtitude": 138.75,
     "x": 123,
-    "y": 456
+    "y": 456,
+    "living": false
   },
   {
     "udid": "fghij",
     "latitude": 35.36,
     "longtitude": 138.73,
     "x": 123,
-    "y": 456
+    "y": 456,
+    "living": false
   },
   {
     "udid": "klnmo",
     "latitude": 35.33,
     "longtitude": 138.74,
     "x": 123,
-    "y": 456
+    "y": 456,
+    "living": false
   }
 ]

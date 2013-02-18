@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  </head>
+  <body style="background:#000000" width="120px">
+
+    <script type="text/javascript">
+      var socket = new io.connect('/uplook');
+
+      socket.on('connect', function() {
+        console.log('connect');
+
+        socket.emit('hello', {
+          udid: '9876',
+          latitude: 35.34,
+          longtitude: 138.76
+        });
+      });
+
+      socket.on('take', function() {
+        console.log('take');
+      });
+    </script>
+
+  </body>
+</html>

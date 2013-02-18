@@ -13,15 +13,7 @@ var path = require('path')
  */
 
 exports.index = function(req, res) {
-  Photo.find({}, function(err, photos) {
-    if (err) console.log(err);
-
-    photos.forEach(function(photo) {
-      photo.file = './photos/' + photo.file;
-    });
-
-    res.render('index', { title: 'Yeah!', photos: photos });
-  });
+  res.render('index');
 };
 
 /*
