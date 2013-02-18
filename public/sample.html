@@ -17,6 +17,13 @@
           latitude: 35.34,
           longtitude: 138.76
         });
+
+        setTimeout(function() {
+          socket.emit('battery', {
+            udid: '9876',
+            battery: 34
+          });
+        }, 5000);
       });
 
       socket.on('viewpoint', function(message) {

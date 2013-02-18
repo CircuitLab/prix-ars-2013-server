@@ -62,9 +62,9 @@ io
       manager.addClient(socket, message);
     });
 
-    // socket.on('battery', function(message) {
-    //   manager.updateBattery(socket, message);
-    // });
+    socket.on('battery', function(message) {
+      manager.updateBattery(message);
+    });
 
     socket.on('disconnect', function() {
       manager.removeClient(socket);

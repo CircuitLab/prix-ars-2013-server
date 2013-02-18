@@ -5,6 +5,7 @@
     "longtitude": 138.74,
     "x": 123,
     "y": 456,
+    "battery": 45,
     "living": false
   },
   {
@@ -21,6 +22,7 @@
     "longtitude": 138.75,
     "x": 123,
     "y": 456,
+    "battery": 80,
     "living": false
   },
   {
@@ -37,6 +39,7 @@
     "longtitude": 138.74,
     "x": 123,
     "y": 456,
+    "battery": 15,
     "living": false
   }
 ]

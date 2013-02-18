@@ -42,11 +42,11 @@ Overlook.prototype.findCamera = function(udid) {
   return this.cameras[udid];
 }
 
-Overlook.prototype.createOrReviveCamera = function(udid) {
-  var camera = this.findCamera(udid);
+Overlook.prototype.createOrReviveCamera = function(camera) {
+  var ca = this.findCamera(camera.udid);
 
-  if (camera) {
-    camera.revive();
+  if (ca) {
+    ca.revive();
   } else {
     this.createCamera(camera);
   }
@@ -70,6 +70,12 @@ Overlook.prototype.updateVp = function(d) {
   this.socket.emit('viewpoint', { udid: d.udid, x: d.x, y: d.y });
 }
 
+Overlook.prototype.renderBattery = function(d) {
+  var camera = this.cameras[d.udid];
+
+  if (camera) camera.renderBattery(d);
+}
+
 Overlook.prototype.renderVp = function(d) {
   var camera = this.cameras[d.udid];
 
@@ -90,6 +96,7 @@ function Camera(overlook, opts) {
   this.photoView = overlook.photoView
 
   this.udid = opts.udid;
+  this.bat = opts.battery;
   this.lat = opts.latitude;
   this.lng = opts.longtitude;
   this.x = opts.x;
@@ -112,6 +119,7 @@ function Camera(overlook, opts) {
   this.template = _.template($('#infowindow').html());
   this.content = this.template({
     udid: this.udid,
+    bat:  this.bat,
     lat:  this.lat,
     lng:  this.lng,
     x:    this.x,
@@ -130,6 +138,12 @@ Camera.prototype.openInfo = function() {
 
 Camera.prototype.closeInfo = function() {
   this.infowindow.close();
+}
+
+Camera.prototype.renderBattery = function(d) {
+  $el = $(this.el);
+
+  $el.find('.battery').html(d.battery);
 }
 
 Camera.prototype.renderVp = function(d) {
@@ -187,8 +201,8 @@ $(function() {
     , TOKYO = new google.maps.LatLng(35.663411, 139.70502);
 
   var mapType = google.maps.MapTypeId.SATELLITE
-    , zoom = 17;
-    // , zoom = 13;
+    // , zoom = 17;
+    , zoom = 13;
 
   var socket = new io.connect('/overlook')
     , photoView = new PhotoView('#panel');
@@ -196,7 +210,7 @@ $(function() {
   var overlook = new Overlook(socket, photoView, {
     zoom: zoom,
     mapTypeId: mapType,
-    center: TOKYO
+    center: FUJI
   });
 
   socket.on('init', function(cameras) {
@@ -206,7 +220,11 @@ $(function() {
   });
 
   socket.on('hello', function(camera) {
-    overlook.createOrReviveCamera(camera.udid);
+    overlook.createOrReviveCamera(camera);
+  });
+
+  socket.on('battery', function(camera) {
+    overlook.renderBattery(camera);
   });
 
   socket.on('viewpoint', function(message) {
