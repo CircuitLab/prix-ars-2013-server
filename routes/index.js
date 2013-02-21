@@ -3,10 +3,14 @@
  * Module dependencies.
  */
 
-var path = require('path')
-  , fs = require('fs')
+var fs = require('fs')
+  , path = require('path')
   , base64id = require('base64id')
-  , Photo = require('../models').Photo; 
+  , models = require('../models')
+  , Camera = models.Camera
+  , Photo = models.Photo
+  , helper = require('../lib/helpers')
+  , photoPath = helper.photoPath; 
 
 /*
  * GET /
@@ -21,22 +25,28 @@ exports.index = function(req, res) {
  */
 
 exports.photos = function(req, res) {
-  var body     = req.body
+  var body = req.body
+    , udid = body.udid
     , filename = Date.now() + '-' + base64id.generateId() + '.png'
-    , filepath = '../public/photos/' + filename
+    , filepath = photoPath(filename)
     , image    = new Buffer(body.photo, 'base64');
 
   fs.writeFile(filepath, image, function(err) {
-    Photo.create({
-      file:      filename,
-      x:         body.x,
-      y:         body.y,
-      timestamp: body.timestamp,
-      battery:   body.battery
-    },
+    if (err) return console.log(err); // TODO: handle error.
 
-    function(err) {
-      if (err) console.log(err);
+    Camera.findByUdid(udid, function(err, camera) {
+      if (err) return console.log(err); // TODO: handle error.
+
+      Photo.create({ file: filename }, function(err, photo) {
+        if (err) return console.log(err); // TODO: handle error.
+
+        camera.photos.push(photo._id);
+
+        camera.save(function() {
+          res.json(200, { status: 'OK' });
+          req.app.emit('app:photos', camera);
+        });
+      });
     });
   });
 
@@ -47,9 +57,9 @@ exports.photos = function(req, res) {
 
   // res.json(200, { status: 'OK' });
 
-  Photo.create({ file: filename }, function(err, photo) {
-    console.log(err, photo);
-  });
+  // Photo.create({ file: filename }, function(err, photo) {
+  //   console.log(err, photo);
+  // });
 
   // Photo.create({
   //   file:      filename,
@@ -64,5 +74,4 @@ exports.photos = function(req, res) {
   //   if (err) console.log(err);
   //   res.redirect('back');
   // });
-  res.json(200, { status: 'OK' });
 }

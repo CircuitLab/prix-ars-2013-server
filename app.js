@@ -27,10 +27,10 @@ app.configure(function() {
   app.set('view engine', 'jade');
   app.use(express.favicon());
   app.use(express.logger('dev'));
-  // app.use(express.bodyParser({
-  //   uploadDir: __dirname + '/public/photos',
-  //   keepExtensions: true
-  // }));
+  app.use(express.bodyParser({
+    uploadDir: __dirname + '/public/photos',
+    keepExtensions: true
+  }));
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(require('stylus').middleware(__dirname + '/public'));
@@ -50,8 +50,8 @@ if ('development' === app.get('env')) {
 app.get('/', routes.index);
 app.post('/photos', routes.photos);
 
-app.on('app:photos', function(photo) {
-  manager.broadcast(photo);
+app.on('app:photos', function(camera) {
+  manager.addPhoto(camera);
 });
 
 io
@@ -62,8 +62,8 @@ io
       manager.addClient(socket, message);
     });
 
-    socket.on('battery', function(message) {
-      manager.updateBattery(message);
+    socket.on('status', function(message) {
+      manager.updateStatus(message);
     });
 
     socket.on('disconnect', function() {

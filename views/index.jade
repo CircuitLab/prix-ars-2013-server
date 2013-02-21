@@ -9,9 +9,10 @@ block content
   script(id='infowindow', type='text/html')
     | <div id="<%= udid %>">
     |   <button class="btn take" href="#" value="<%= udid %>"><i class="icon-camera"></i></button>
-    |   <p>battery：<span class="battery"><%= bat %></span>%</p>
-    |   <p>lat：<%= lat %></p>
-    |   <p>lng：<%= lng %></p>
+    |   <p>battery：<span class="bat"><%= bat %></span>%</p>
+    |   <p>lat：<span class="lat"><%= lat %></span></p>
+    |   <p>lng：<span class="lng"><%= lng %></span></p>
+    |   <p>compass：<span class="com"><%= com %></span></p>
     |   <form class="viewpoint" action="#">
     |     <input type="hidden" name="udid" value="<%= udid %>">
     |     <p>

@@ -16,6 +16,7 @@ var Camera = module.exports = new Schema({
   battery:    Number,
   x:          Number,
   y:          Number,
+  compass:    Number,
   living:     { type: Boolean, default: false },
   photos:     [{ type: Schema.Types.ObjectId, ref: 'Photo' }],
   created:    { type: Date, default: Date.now, index: true }
@@ -26,7 +27,12 @@ Camera.statics.findAll = function(udid, callback) {
 }
 
 Camera.statics.findByUdid = function(udid, callback) {
-  this.findOne({ udid: udid }, callback);
+  this
+    .findOne({ udid: udid })
+    .populate('photos')
+    .exec(function(err, doc) {
+      callback(err, doc);
+    });
 }
 
 Camera.statics.findOrInitializeByUdid = function(udid, callback) {

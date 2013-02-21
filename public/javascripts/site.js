@@ -10,6 +10,8 @@ $.fn.serializeObject = function() {
   return obj;
 }
 
+window.infowindows = [];
+
 /**
  * Constructs a new Overlook.
  */
@@ -66,20 +68,26 @@ Overlook.prototype.closeInfo = function() {
   });
 }
 
-Overlook.prototype.updateVp = function(d) {
+Overlook.prototype.updatePoint = function(d) {
   this.socket.emit('viewpoint', { udid: d.udid, x: d.x, y: d.y });
 }
 
-Overlook.prototype.renderBattery = function(d) {
+Overlook.prototype.addPhoto = function(d) {
   var camera = this.cameras[d.udid];
 
-  if (camera) camera.renderBattery(d);
+  if (camera) camera.addPhoto(d);
 }
 
-Overlook.prototype.renderVp = function(d) {
+Overlook.prototype.renderStatus = function(d) {
   var camera = this.cameras[d.udid];
 
-  if (camera) camera.renderVp(d);
+  if (camera) camera.renderStatus(d);
+}
+
+Overlook.prototype.renderPoint = function(d) {
+  var camera = this.cameras[d.udid];
+
+  if (camera) camera.renderPoint(d);
 }
 
 Overlook.prototype.takePhoto = function(udid) {
@@ -99,6 +107,7 @@ function Camera(overlook, opts) {
   this.bat = opts.battery;
   this.lat = opts.latitude;
   this.lng = opts.longtitude;
+  this.com = opts.compass;
   this.x = opts.x;
   this.y = opts.y;
   this.living = opts.living;
@@ -122,40 +131,58 @@ function Camera(overlook, opts) {
     bat:  this.bat,
     lat:  this.lat,
     lng:  this.lng,
+    com:  this.com,
     x:    this.x,
     y:    this.y
   });
 
   this.infowindow = new google.maps.InfoWindow({ content: this.content });
+  this.opened = false;
 }
 
 Camera.prototype.openInfo = function() {
   this.overlook.closeInfo();
+
   this.infowindow.open(this.map, this.marker);
+  this.opened = true;
 
   this.addPhotos();
 }
 
 Camera.prototype.closeInfo = function() {
   this.infowindow.close();
+  this.opened = false;
 }
 
-Camera.prototype.renderBattery = function(d) {
+Camera.prototype.renderStatus = function(d) {
   $el = $(this.el);
 
-  $el.find('.battery').html(d.battery);
+  $el.find('.bat').html(d.battery);
+  $el.find('.lat').html(d.latitude);
+  $el.find('.lng').html(d.longtitude);
+  $el.find('.com').html(d.compass);
 }
 
-Camera.prototype.renderVp = function(d) {
+Camera.prototype.renderPoint = function(d) {
   $el = $(this.el);
 
   $el.find('.viewpoint-x').val(d.x);
   $el.find('.viewpoint-y').val(d.y);
 }
 
+Camera.prototype.addPhoto = function(d) {
+  var photos = d.photos
+    , lastIndex = photos.length - 1
+    , photo = photos[lastIndex];
+
+  this.photos.push(photo);
+  if (this.opened) this.photoView.prependPhoto(photo);
+}
+
 Camera.prototype.addPhotos = function() {
-  this.photoView.removePhotos();
-  this.photoView.addPhotos(this.photos);
+  this.photoView
+    .removePhotos()
+    .addPhotos(this.photos);
 }
 
 Camera.prototype.die = function() {
@@ -181,18 +208,20 @@ function PhotoView(panel) {
 PhotoView.prototype.addPhotos = function(photos) {
   var self = this;
   _.map(photos, function(photo) {
-    self.appendPhoto(photo);
+    self.prependPhoto(photo);
   });
 }
 
 PhotoView.prototype.removePhotos = function(photo) {
   $(this.el).children().remove();
+
+  return this;
 }
 
-PhotoView.prototype.appendPhoto = function(photo) {
+PhotoView.prototype.prependPhoto = function(photo) {
   var tmpl = _.template($('#photo').html());
 
-  $(this.el).append(tmpl({ src: photo.file }));
+  $(this.el).prepend(tmpl({ src: photo.file }));
 }
 
 $(function() {
@@ -201,8 +230,8 @@ $(function() {
     , TOKYO = new google.maps.LatLng(35.663411, 139.70502);
 
   var mapType = google.maps.MapTypeId.SATELLITE
-    // , zoom = 17;
-    , zoom = 13;
+    , zoom = 17;
+    // , zoom = 13;
 
   var socket = new io.connect('/overlook')
     , photoView = new PhotoView('#panel');
@@ -210,7 +239,7 @@ $(function() {
   var overlook = new Overlook(socket, photoView, {
     zoom: zoom,
     mapTypeId: mapType,
-    center: FUJI
+    center: TOKYO
   });
 
   socket.on('init', function(cameras) {
@@ -223,12 +252,16 @@ $(function() {
     overlook.createOrReviveCamera(camera);
   });
 
-  socket.on('battery', function(camera) {
-    overlook.renderBattery(camera);
+  socket.on('photo', function(camera) {
+    overlook.addPhoto(camera);
+  });
+
+  socket.on('status', function(camera) {
+    overlook.renderStatus(camera);
   });
 
   socket.on('viewpoint', function(message) {
-    overlook.renderVp(message);
+    overlook.renderPoint(message);
   });
 
   socket.on('goodbye', function(camera) {
@@ -236,7 +269,7 @@ $(function() {
   });
 
   $(document).on('submit', '.viewpoint', function() {
-    overlook.updateVp($(this).serializeObject());
+    overlook.updatePoint($(this).serializeObject());
     return false;
   });
 
