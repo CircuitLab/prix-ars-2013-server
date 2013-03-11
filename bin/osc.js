@@ -72,7 +72,7 @@ UI.prototype.send = function(address, msg) {
 var ui = new UI();
 
 ui.on('hello', function(message) {
-  console.log(message);
+  console.log('osc.js:hello!', message);
 });
 
 ui.on('viewpoint', function(message) {

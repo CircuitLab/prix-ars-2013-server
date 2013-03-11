@@ -12,8 +12,9 @@
     "base64id": "~0.1.0",
     "mongoose": "~3.5.4",
     "morph": "~0.1.0",
-    "socket.io": "~0.9.13",
+    "socket.io": "*",
     "spdy": "~1.4.3",
-    "osc-min": "0.0.9"
+    "osc-min": "0.0.9",
+    "node-dev": "~2.0.0"
   }
 }
