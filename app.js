@@ -10,12 +10,14 @@ var pkg = require('./package')
   , http = require('http')
   , path = require('path')
   , sio = require('socket.io')
-  , Manager = require('./lib/manager');
+  , Manager = require('./lib/manager')
+  , UI = require('./lib/ui');
 
 var app = module.exports = express()
   , server = http.createServer(app)
   , io = sio.listen(server)
-  , manager = new Manager(app, io);
+  , manager = new Manager(app, io)
+  , ui = new UI();
 
 /**
  * Configuration.
@@ -84,6 +86,18 @@ io
       manager.takePhoto(message);
     });
   });
+
+ui
+  .on('hello', function(message) {
+    ui.addClient(message);
+  });
+
+//   .on('viewpoint', function(message) {
+//     manager.pointView(message);
+//   })
+//   .on('take', function(message) {
+//     manager.takePhoto(message);
+//   })
 
 /**
  * Listen.

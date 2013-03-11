@@ -69,7 +69,11 @@ Overlook.prototype.closeInfo = function() {
 }
 
 Overlook.prototype.updatePoint = function(d) {
-  this.socket.emit('viewpoint', { udid: d.udid, x: d.x, y: d.y });
+  this.socket.emit('viewpoint', {
+    udid: d.udid,
+    compass: d.compass,
+    angle: d.angle
+  });
 }
 
 Overlook.prototype.addPhoto = function(d) {
@@ -108,8 +112,7 @@ function Camera(overlook, opts) {
   this.lat = opts.latitude;
   this.lng = opts.longtitude;
   this.com = opts.compass;
-  this.x = opts.x;
-  this.y = opts.y;
+  this.ang = opts.angle;
   this.living = opts.living;
 
   this.photos = opts.photos;
@@ -132,8 +135,7 @@ function Camera(overlook, opts) {
     lat:  this.lat,
     lng:  this.lng,
     com:  this.com,
-    x:    this.x,
-    y:    this.y
+    ang:  this.ang
   });
 
   this.infowindow = new google.maps.InfoWindow({ content: this.content });
@@ -160,7 +162,9 @@ Camera.prototype.renderStatus = function(d) {
   $el.find('.bat').html(d.battery);
   $el.find('.lat').html(d.latitude);
   $el.find('.lng').html(d.longtitude);
-  $el.find('.com').html(d.compass);
+
+  $el.find('.viewpoint-compass').val(d.compass);
+  $el.find('.viewpoint-angle').val(d.angle);
 }
 
 Camera.prototype.renderPoint = function(d) {

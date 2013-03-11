@@ -1,0 +1,4 @@
+{
+  "host": "localhost:3000",
+  "photoPath": "http://localhost:3000/photos/"
+}

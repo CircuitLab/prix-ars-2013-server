@@ -12,14 +12,13 @@ block content
     |   <p>battery：<span class="bat"><%= bat %></span>%</p>
     |   <p>lat：<span class="lat"><%= lat %></span></p>
     |   <p>lng：<span class="lng"><%= lng %></span></p>
-    |   <p>compass：<span class="com"><%= com %></span></p>
     |   <form class="viewpoint" action="#">
     |     <input type="hidden" name="udid" value="<%= udid %>">
     |     <p>
-    |       x：<input class="viewpoint-x" type="text" name="x" size="40" value="<%= x %>">
+    |       compass：<input class="viewpoint-compass" type="text" name="compass" size="40" value="<%= com %>">
     |     </p>
     |     <p>
-    |       y：<input class="viewpoint-y" type="text" name="y" size="40" value="<%= y %>">
+    |       angle：<input class="viewpoint-angle" type="text" name="angle" size="40" value="<%= ang %>">
     |     </p>
     |     <p class="submit-btn">
     |       <input class="btn btn-primary" type="submit" value="Submit">

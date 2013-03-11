@@ -14,9 +14,8 @@ var Camera = module.exports = new Schema({
   latitude:   Number,
   longtitude: Number,
   battery:    Number,
-  x:          Number,
-  y:          Number,
   compass:    Number,
+  angle:      Number,
   living:     { type: Boolean, default: false },
   photos:     [{ type: Schema.Types.ObjectId, ref: 'Photo' }],
   created:    { type: Date, default: Date.now, index: true }

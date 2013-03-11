@@ -37,7 +37,15 @@ exports.photos = function(req, res) {
     Camera.findByUdid(udid, function(err, camera) {
       if (err) return console.log(err); // TODO: handle error.
 
-      Photo.create({ file: filename }, function(err, photo) {
+      Photo.create({
+        file:      filename,
+        latitude:  body.latitude,
+        longitude: body.longitude,
+        compass:   body.compass,
+        angle:     body.angle
+      },
+
+      function(err, photo) {
         if (err) return console.log(err); // TODO: handle error.
 
         camera.photos.push(photo._id);
