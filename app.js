@@ -16,8 +16,8 @@ var pkg = require('./package')
 var app = module.exports = express()
   , server = http.createServer(app)
   , io = sio.listen(server)
-  , manager = new Manager(app, io)
-  , ui = new UI();
+  , ui = new UI()
+  , manager = new Manager(app, io, ui);
 
 /**
  * Configuration.

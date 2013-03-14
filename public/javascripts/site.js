@@ -231,10 +231,10 @@ PhotoView.prototype.prependPhoto = function(photo) {
 $(function() {
 
   var FUJI = new google.maps.LatLng(35.36, 138.75)
-    , TOKYO = new google.maps.LatLng(35.663411, 139.70502);
+    , TOKYO = new google.maps.LatLng(35.563411, 139.40502);
 
   var mapType = google.maps.MapTypeId.SATELLITE
-    , zoom = 17;
+    , zoom = 10;
     // , zoom = 13;
 
   var socket = new io.connect('/overlook')

@@ -17,6 +17,7 @@ var Camera = module.exports = new Schema({
   compass:    Number,
   angle:      Number,
   living:     { type: Boolean, default: false },
+  operable:   Boolean,
   photos:     [{ type: Schema.Types.ObjectId, ref: 'Photo' }],
   created:    { type: Date, default: Date.now, index: true }
 });
