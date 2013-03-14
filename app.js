@@ -90,14 +90,13 @@ io
 ui
   .on('hello', function(message) {
     ui.addClient(message);
+  })
+  .on('viewpoint', function(message) {
+    manager.pointView(message);
+  })
+  .on('take', function(message) {
+    manager.takePhoto(message);
   });
-
-//   .on('viewpoint', function(message) {
-//     manager.pointView(message);
-//   })
-//   .on('take', function(message) {
-//     manager.takePhoto(message);
-//   })
 
 /**
  * Listen.
