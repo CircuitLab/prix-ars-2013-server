@@ -42,7 +42,8 @@ exports.photos = function(req, res) {
         latitude:  body.latitude,
         longitude: body.longitude,
         compass:   body.compass,
-        angle:     body.angle
+        angle:     body.angle,
+        camera:    camera._id
       },
 
       function(err, photo) {
