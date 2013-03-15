@@ -282,6 +282,10 @@ $(function() {
     return false;
   });
 
+  setInterval(function() {
+    console.log(overlook.cameras);
+  }, 3000);
+
   window.socket = socket;
   window.overlook = overlook;
 
