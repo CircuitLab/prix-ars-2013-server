@@ -60,3 +60,24 @@ Camera.statics.killByUdid = function(udid, callback) {
     });
   });
 }
+
+Camera.methods.toApiResponse = function() {
+  var self = this
+    , photos = [];
+
+  self.photos.forEach(function(photo) {
+    photos.push(photo.toApiResponse());
+  });
+
+  return {
+    udid: self.udid,
+    latitude: self.latitude,
+    longitude: self.longitude,
+    compass: self.compass,
+    angle: self.angle,
+    battery: self.battery,
+    operable: self.operable,
+    living: self.living,
+    photos: photos
+  }
+}

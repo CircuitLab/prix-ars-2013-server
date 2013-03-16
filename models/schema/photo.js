@@ -31,3 +31,16 @@ Photo.post('init', function(doc) {
     console.log(doc);
   }
 });
+
+Photo.methods.toApiResponse = function() {
+  var self = this;
+
+  return {
+    url: self.url,
+    correction: 0,
+    latitude: self.latitude,
+    longitude: self.longitude,
+    compass: self.compass,
+    angle: self.angle
+  }
+}
